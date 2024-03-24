@@ -20,6 +20,8 @@ const SignUpForm=()=>{
         setFormFields({...formFields,[name]: value})
     }
 
+    //function to clear form Fields
+    const resetFormFields=()=>setFormFields(defaultFormFields);
 
     const handleSubmit = async (event)=>{
         event.preventDefault();
@@ -28,10 +30,12 @@ const SignUpForm=()=>{
             alert("Passwords do not match!");
             return
         }
+
         try{
             const {user}=await createAuthUserWithEmailAndPassword(email,password);
-            const createdUser=await createUserProfileDoc(user,{"displayName": displayName});
-            console.log(createdUser);
+
+            await createUserProfileDoc(user,{"displayName": displayName});
+            resetFormFields();
         }
         catch(error){
             if(error.code === 'auth/email-already-in-use'){

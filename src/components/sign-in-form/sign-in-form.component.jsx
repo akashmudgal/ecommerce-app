@@ -1,23 +1,30 @@
 import FormInput from "../form-input/form-input.component"
 import Button from "../button/button.component";
-import { signInWithGooglePopup,createUserProfileDoc,signInUserwithCredential } from "../../utils/firebase/firebase.utils";
+import { signInWithGooglePopup,signInUserwithCredential } from "../../utils/firebase/firebase.utils";
 import { useState } from "react";
+
 import './sign-in-form.styles.scss'
+
 const SignInForm= ()=>{
     const defaultFormFields={
         email: '',
         password: ''
     }
+
+    // state variable for form field values
     const [formFields,setFormFields] = useState(defaultFormFields);
     const {email, password} = formFields;
 
+    //function to clear form Fields
     const resetFormFields=()=>setFormFields(defaultFormFields);
 
+    //function to update the formFields state as input changes
     const handleChange=(event) => {
         const {name,value}=event.target;
         setFormFields({...formFields,[name]: value})
     }
 
+    // function to handle form submission
     const handleSubmit= (event)=>{
         event.preventDefault();
         signInUserwithCredential(email,password)
@@ -38,9 +45,8 @@ const SignInForm= ()=>{
 
     const signInGoogle = ()=>{
         signInWithGooglePopup()
-        .then(async (result)=>{
-            const {user}=result;
-            await createUserProfileDoc(user);
+        .then(()=>{
+            alert("Signed in with Google Successfully!");
         })
         .catch((error)=>{
             switch(error.code) {
@@ -51,7 +57,6 @@ const SignInForm= ()=>{
                     console.log(error);
             }
         });
-
     }
 
     return (
